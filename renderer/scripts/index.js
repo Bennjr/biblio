@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 const sidebar = document.querySelector(".sidebar");
 let isResizing = false;
 
@@ -34,4 +36,26 @@ document.addEventListener("mouseup", () => {
         isResizing = false;
         document.body.style.cursor = "default";
     }
+});
+
+document.getElementById('minimize-btn').addEventListener('click', () => {
+  ipcRenderer.send('minimize-window');
+});
+
+document.getElementById('maximize-btn').addEventListener('click', () => {
+  ipcRenderer.send('maximize-window');
+});
+
+document.getElementById('close-btn').addEventListener('click', () => {
+  ipcRenderer.send('close-window');
+});
+
+const maximizeIcon = document.getElementById('maximize-icon');
+
+ipcRenderer.on('window-state-changed', (event, state) => {
+  if (state === 'maximized') {
+    maximizeIcon.src = 'assets/icons/titlebar/maximize_fullscreen.svg';
+  } else {
+    maximizeIcon.src = 'assets/icons/titlebar/maximize_window.svg';
+  }
 });
